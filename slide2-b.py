@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr 13 17:21:03 2019
+Created on Fry May 24 23:37:16 2019
 
 @author: Suriano, Ramiro & Armanasco, Matias
 """
@@ -14,8 +14,8 @@ im_lena = imageio.imread("images\slides2 - Colormaps\Lena128G.png")
 im_particles = imageio.imread("images\slides2 - Colormaps\ParticlesG.png")
 im_retina = imageio.imread("images\slides2 - Colormaps\RetinaG.png")
 
-showColormaps(im_lena)
-showColormaps(im_particles)
-showColormaps(im_retina)
+tools.showColormaps(im_lena)
+tools.showColormaps(im_particles)
+tools.showColormaps(im_retina)
 
 

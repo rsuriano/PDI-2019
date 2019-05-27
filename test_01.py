@@ -15,16 +15,18 @@ im_in = imageio.imread("images\slides2 - Luminance\Lena128C.png")
 im_in = im_in[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda borro una (alpha)
                            #lo divido por 255 para cambiarlo de unit8
 
+
 new_im = np.zeros(im_in.shape)
 new_im = tools.convert_to('YIQ',im_in)
 
-new_im[:,:,0] *= 1.5 #factor de luminancia
+new_im[:,:,0] *= 1 #factor de luminancia
 
 luminancia = np.zeros(im_in.shape)
 luminancia = tools.convert_to('RGB',new_im)
 
 luminancia = np.clip(luminancia,0.,1.)
 plt.imshow(luminancia)
+
 
 
 """

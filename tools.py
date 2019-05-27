@@ -14,6 +14,7 @@ def convert_to(space,image):
     imageRet = np.zeros(image.shape)
     toYIQ = np.array([[0.299,0.587,0.114] , [0.595716,-0.274453,-0.321263] , [0.211456,-0.522591,0.311135]])
     toRGB = np.array([[1,0.9663,0.621] , [1,-0.2721,-0.6474] , [1,-1.107,1.7046]])
+    imgAux = np.array([image[:,:,0],image[:,:,1],image[:,:,2]])
     
     if (space == 'RGB'):
         imageRet[:,:,0] = toRGB[0,0]*image[:,:,0] + toRGB[0,1]*image[:,:,1] + toRGB[0,2]*image[:,:,2]

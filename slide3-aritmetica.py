@@ -80,6 +80,7 @@ def sumaPromYIQ(image1,image2):
     
     return image3
 
+fig=plt.figure()
 paisaje = imageio.imread("images\slides3 - Pixel Arithmetic\image1.png")
 paisaje = paisaje[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda borro una (alpha)
                            #lo divido por 255 para cambiarlo de unit8
@@ -88,27 +89,42 @@ plaza = plaza[:,:,:3]/255.
 
 resultado = np.zeros(paisaje.shape)
 
+print("1 - Suma RGB Clampeada")
+print("2 - Resta RGB Clampeada")
+print("3 - Suma RGB Promediada")
+print("4 - Resta RGB Promediada")
+print("5 - Suma YIQ Clampeada")
+print("6 - Suma YIQ Promediada")
+
+
 suma = input('Elija operación (de 1 a 6): ')
 
 if suma=='1':
     resultado = sumaCampleadaRGB(paisaje,plaza)
+    print("1 - Suma RGB Clampeada")
     plt.imshow(resultado)
 elif suma=='2':
     resultado = restaCampleadaRGB(paisaje,plaza)
+    print("2 - Resta RGB Clampeada")
     plt.imshow(resultado)
 elif suma=='3':
     resultado = sumaPromRGB(paisaje,plaza)
+    print("3 - Suma RGB Promediada")
     plt.imshow(resultado)
 elif suma=='4':
     resultado = restaPromRGB(paisaje,plaza)
+    print("4 - Resta RGB Promediada")
     plt.imshow(resultado)
 elif suma=='5':
     resultado = sumaCampleadaYIQ(paisaje,plaza)
+    print("5 - Suma YIQ Clampeada")
     plt.imshow(resultado)
 elif suma=='6':
     resultado = sumaPromYIQ(paisaje,plaza)
+    print("6 - Suma YIQ Promediada")
     plt.imshow(resultado)
 else: 
-    print(suma,'no es una operación definida')
+    print(suma,' no es una operación definida')
+
 
  

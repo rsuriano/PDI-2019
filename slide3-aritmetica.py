@@ -11,10 +11,11 @@ import matplotlib.pyplot as plt
 import tools
 
 def sumaClampeadaRGB(image1,image2):
-    image3 = np.zeros(image1.shape)
-    image3[:,:,0] = image1[:,:,0] + image2[:,:,0]
-    image3[:,:,1] = image1[:,:,1] + image2[:,:,1]
-    image3[:,:,2] = image1[:,:,2] + image2[:,:,2]
+    image3 = image1 + image2 #np.zeros(image1.shape)
+    
+    #image3[:,:,0] = image1[:,:,0] + image2[:,:,0]
+    #image3[:,:,1] = image1[:,:,1] + image2[:,:,1]
+    #image3[:,:,2] = image1[:,:,2] + image2[:,:,2]
     
     image3 = np.clip(image3,0.,1.)
     
@@ -87,14 +88,9 @@ def ifDarker(image1,image2):
     image2 = tools.convert_to('YIQ',image2)
 
     darker = image1[:,:,0]<image2[:,:,0]
-    if darker:
-        image3[:,:,0]=image1[:,:,0]
-        image3[:,:,1]=image1[:,:,1]
-        image3[:,:,2]=image1[:,:,2]
-    else:
-        image3[:,:,0]=image2[:,:,0]
-        image3[:,:,1]=image2[:,:,1]
-        image3[:,:,2]=image2[:,:,2]
+    brighter = 1 - darker
+    for i in range(3):
+        image3[:,:,i] = image1[:,:,i]*darker + image2[:,:,i]*brighter
     
     image3 = tools.convert_to('RGB',image3)
     

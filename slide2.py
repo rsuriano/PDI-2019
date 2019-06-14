@@ -19,7 +19,7 @@ im_in = im_in[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda b
 new_im = np.zeros(im_in.shape)
 new_im = tools.convert_to('YIQ',im_in)
 
-factor_de_luminancia = 1.5
+factor_de_luminancia = 0.5
 factor_de_saturacion = 1
 
 new_im[:,:,0] *= factor_de_luminancia

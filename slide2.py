@@ -18,19 +18,19 @@ im_in = im_in[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda b
 new_im = np.zeros(im_in.shape)
 new_im = tools.convert_to('YIQ',im_in)
 
-factor_de_luminancia = 1.2
-factor_de_saturacion = 1
+factor_luminancia = 1.2
+factor_saturacion = 1
 
-new_im[:,:,0] *= factor_de_luminancia
-new_im[:,:,1] *= factor_de_saturacion
-new_im[:,:,2] *= 1 - factor_de_saturacion
+new_im[:,:,0] *= factor_luminancia
+new_im[:,:,1] *= factor_saturacion
+new_im[:,:,2] *= 1 - factor_saturacion
 
 new_im[:,:,0] = np.clip(new_im[:,:,0],0.,1.)
 new_im[:,:,1] = np.clip(new_im[:,:,1],-0.59,0.59)
 new_im[:,:,2] = np.clip(new_im[:,:,2],-0.52,0.52)
 
-luminancia = np.zeros(im_in.shape)
-luminancia = tools.convert_to('RGB',new_im)
+img_procesada = np.zeros(im_in.shape)
+img_procesada = tools.convert_to('RGB',new_im)
 
-luminancia = np.clip(luminancia,0.,1.)
-plt.imshow(luminancia)
+img_procesada = np.clip(img_procesada,0.,1.)
+plt.imshow(img_procesada)

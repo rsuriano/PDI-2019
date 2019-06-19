@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import tools 
 
 
-#CODIGO CON FALLAS
 im_in = imageio.imread("images\slides2 - Luminance\Lena128C.png")
 im_in = im_in[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda borro una (alpha)
                            #lo divido por 255 para cambiarlo de unit8
@@ -19,7 +18,7 @@ im_in = im_in[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda b
 new_im = np.zeros(im_in.shape)
 new_im = tools.convert_to('YIQ',im_in)
 
-factor_de_luminancia = 0.5
+factor_de_luminancia = 1.2
 factor_de_saturacion = 1
 
 new_im[:,:,0] *= factor_de_luminancia
@@ -35,7 +34,3 @@ luminancia = tools.convert_to('RGB',new_im)
 
 luminancia = np.clip(luminancia,0.,1.)
 plt.imshow(luminancia)
-
-
-
-

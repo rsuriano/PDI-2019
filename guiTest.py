@@ -5,6 +5,10 @@ Created on Fri Jun 21 02:33:20 2019
 @author: Ramiro
 """
 
+import imageio
+import numpy as np
+import matplotlib.pyplot as plt
+import tools
 import tkinter as tk
 
 class Application(tk.Frame):
@@ -15,17 +19,18 @@ class Application(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.hi_there = tk.Button(self)
-        self.hi_there["text"] = "Hello World\n(click me)"
-        self.hi_there["command"] = self.say_hi
-        self.hi_there.pack(side="top")
+        self.load = tk.Button(self)
+        self.load["text"] = "Cargar Imagen"
+        self.load["command"] = self.printImage
+        self.load.pack(side="bottom")
 
-        self.quit = tk.Button(self, text="QUIT", fg="red",
-                              command=self.master.destroy)
-        self.quit.pack(side="bottom")
-
-    def say_hi(self):
-        print("hi there, everyone!")
+    def printImage(self):
+        imgRGB = imageio.imread("images\slides4 - Histogram\Lena512.png")
+        imagen = tk.PhotoImage(file='images\slides4 - Histogram\Lena512.png')
+        cv = tk.Canvas(root, width = 300, height = 300)
+        cv.create_image((20,20),image=imagen,anchor='nw')
+        print("Image loaded successfully")
+    
 
 root = tk.Tk()
 app = Application(master=root)

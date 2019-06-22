@@ -109,3 +109,18 @@ def ifDarker(image1,image2):
     image3 = convert_to('RGB',image3)
     
     return image3
+
+
+#Histograma de luminancias
+#Recibe la capa Y de una imagen, y plotea el histograma
+def histogramaY(image, bars):
+    histogram = np.zeros((1,bars+1))
+    for i in np.ndenumerate(image):
+        histogram[0,int(np.trunc(i[1]*bars))] +=1/np.prod(image.shape)
+    
+    histogram = histogram[0]
+    names = np.arange(0,len(histogram))
+    
+    plt.figure()
+    plt.bar(names,histogram)
+    return 0

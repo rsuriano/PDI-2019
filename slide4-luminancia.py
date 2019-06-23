@@ -10,12 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
-columnQty = 100
+columnQty = 200
 #Loading image
 imgpath = "images\slides4 - Histogram\{}.png"
 imgName = input("Select image name: ")
-
-escalar = input("Factor de escala: ")
+columnQty = int(input("Number of bars: "))
+escalar = input("Factor de luminancia: ")
 
 img = imageio.imread(imgpath.format(imgName))
 img = img[:,:,:3]/255.
@@ -27,20 +27,19 @@ img_Y = img_YIQ[:,:,0]
 #Applies luminance change to a copy of img
 imgAfectada = img_YIQ
 imgAfectada[:,:,0] *= float(escalar)
-new_im[:,:,0] = np.clip(new_im[:,:,0],0.,1.)
-new_im[:,:,1] = np.clip(new_im[:,:,1],-0.59,0.59)
-new_im[:,:,2] = np.clip(new_im[:,:,2],-0.52,0.52)
+imgAfectada[:,:,0] = np.clip(imgAfectada[:,:,0],0.,1.)
 imgAfectada = tools.convert_to("RGB",imgAfectada)
 
 #Plots original image and luminance histogram
 plt.figure(1)
 plt.imshow(img)
+plt.figure(2)
 tools.histogramaY(img, columnQty)
 
 #Plots altered image
 plt.figure(3)
 plt.imshow(imgAfectada)
-plt.figure()
+plt.figure(4)
 tools.histogramaY(imgAfectada, columnQty)
 
 #Takes selection for the filter

@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
-columnQty = 10
+columnQty = 100
 escalar = 1.5
 filtro = 1
 """
@@ -31,9 +31,7 @@ img_Y = img_YIQ[:,:,0]
 
 #Applies luminance change to a copy of img
 img2_YIQ = img_YIQ
-img2_Y = img2_YIQ[:,:,0]
-
-img2_Y *= escalar
+img2_YIQ[:,:,0] *= escalar
 img2_Y = np.clip(img2_YIQ[:,:,0],0.,1.)
 
 img2_YIQ[:,:,0] = img2_Y
@@ -69,4 +67,4 @@ tools.histogramaY(img2_YIQ[:,:,0], columnQty)
 plt.figure(5)
 plt.imshow(filteredImg_RGB)
 plt.figure(6)
-tools.histogramaY(filteredImg_YIQ[:,:,0], columnQty)
+#tools.histogramaY(filteredImg_YIQ[:,:,0], columnQty)

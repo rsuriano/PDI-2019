@@ -12,19 +12,15 @@ import tools
 
 columnQty = 10
 escalar = 1.5
-
+filtro = 1
+"""
+1 - Raiz
+2 - Cuadrado
+3 - Lineal a trozos
+"""
 #Loading image
 imgpath = "images\slides4 - Histogram\{}.png"
 imgName = input("Select image name: ")
-#columnQty = int(input("Number of bars: "))
-#advanced = input("Advanced input? Y/N: ")
-#advanced = advanced.upper()
-#if advanced != "N":
-    #escalar = input("Factor de luminancia: ")
-    #Takes selection for the filter
-    #print("1 - Filtro raiz\n2 - Filtro cuadrado\n3 - Lineal a trozos")
-    #chosenFilter = input("Select filter: ")
-
 img = imageio.imread(imgpath.format(imgName))
 img = img[:,:,:3]/255.
 
@@ -32,37 +28,45 @@ img = img[:,:,:3]/255.
 img_YIQ = tools.convert_to('YIQ', img)
 img_Y = img_YIQ[:,:,0]
 
-#if advanced != "N":
-#Applies luminance change to a copy of img
-imgAfectada = img_YIQ
-imgAfectada[:,:,0] *= escalar
-imgAfectada[:,:,0] = np.clip(imgAfectada[:,:,0],0.,1.)
-imgAfectada = tools.convert_to("RGB",imgAfectada)
 
-for i in range(3):
-    imgAfectada[:,:,i] = np.clip(imgAfectada[:,:,i], 0., 1.)
-        
-print(img.shape)
-print(imgAfectada.shape)
+#Applies luminance change to a copy of img
+img2_YIQ = img_YIQ
+img2_Y = img2_YIQ[:,:,0]
+
+img2_Y *= escalar
+img2_Y = np.clip(img2_YIQ[:,:,0],0.,1.)
+
+img2_YIQ[:,:,0] = img2_Y
+img2_RGB = tools.convert_to("RGB", img2_YIQ)
+
+
+#Filters the image
+filteredImg_YIQ = img_YIQ
+
+if filtro == 1:
+    filteredImg_YIQ[:,:,0] = np.sqrt(filteredImg_YIQ[:,:,0])
+if filtro == 2:
+    filteredImg_YIQ[:,:,0] = np.square(filteredImg_YIQ[:,:,0])
+
+filteredImg_RGB = tools.convert_to("RGB", filteredImg_YIQ)
+
 
 ### PLOTS ###
 
-#Plots original image and luminance histogram
+"""Plots original image and luminance histogram"""
 plt.figure(1)
-#plt.subplot(121)
 plt.imshow(img)
-#plt.subplot(122)
 plt.figure(2)
 tools.histogramaY(img_Y, columnQty)
-#plt.figure(3)
-#plt.hist(img_Y)
 
-
-#if advanced != "N":
-#Plots altered image
+"""Plots altered image"""
 plt.figure(3)
-#plt.subplot(121)
-plt.imshow(imgAfectada)
+plt.imshow(img2_RGB)
 plt.figure(4)
-#plt.subplot(122)
-tools.histogramaY(imgAfectada[:,:,0], columnQty)
+tools.histogramaY(img2_YIQ[:,:,0], columnQty)
+
+"""Plots filtered image"""
+plt.figure(5)
+plt.imshow(filteredImg_RGB)
+plt.figure(6)
+tools.histogramaY(filteredImg_YIQ[:,:,0], columnQty)

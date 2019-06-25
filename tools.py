@@ -123,6 +123,5 @@ def histogramaY(image, bars):
         # barra correspondiente en el histograma
         histogram[int(np.trunc(i[1]*bars))] +=1/np.prod(image.shape)
     
-    #plt.figure()
     plt.bar(names,histogram, width=bars/20)
     return histogramaY

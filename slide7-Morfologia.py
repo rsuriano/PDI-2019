@@ -20,9 +20,8 @@ imagen = np.clip(imagen,0.,1.)
 plt.figure(0)
 plt.imshow(imagen,'gray')
 
-img2 = tools.erode(imagen)
-img2 = tools.dilate(img2)
-img2 = tools.erode(img2)
+img2 = tools.erode(imagen,5)
+#img2 = tools.dilate(img2,1)
 
 plt.figure(1)
 plt.imshow(img2, 'gray')

@@ -10,6 +10,7 @@ from scipy import fftpack
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
+from PIL import Image
 
 imagen = imageio.imread("images\slides5 - Fourier\circle.png")
 imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
@@ -28,9 +29,12 @@ plt.show()
 mag = imagen_fourier[0]
 phase = imagen_fourier[1]
 
+fourier = Image.fromarray(np.log10(imagen_fourier[0]+1))
+fourier.convert("L").save("fourier_image.bmp")
+
 im_inversa = tools.fourier_undo(mag,phase)
 
-plt.figure(1)
+plt.figure(3)
 plt.imshow(im_inversa,'gray')
 plt.show()
 

@@ -12,8 +12,12 @@ import matplotlib.pyplot as plt
 import tools
 from PIL import Image
 
-imagen = imageio.imread("images\slides5 - Fourier\circle.png")
-imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
+img = "images\slides5 - Fourier\{}.png"
+#imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
+
+imgName = input("Select image name: ")
+imagen = imageio.imread(img.format(imgName))
+imagen = imagen/255.
 imagen = np.clip(imagen,0.,1.)
 
 imagen_fourier = tools.fourier(imagen)

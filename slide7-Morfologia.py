@@ -23,14 +23,14 @@ plt.imshow(imagen,'gray')
 
 imagenErosionada = np.zeros(imagen.shape)
 squaredCircle = np.zeros((3,3))
-
+print(imagenErosionada.shape)
 for i in np.ndenumerate(imagen):
     minValue = 1.
     coordImg = i[0]
-    if coordImg[0]<len(imagen[0])-2 and coordImg[1]<len(imagen[0])-2:  
+    if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
         for j in np.ndenumerate(squaredCircle):
             coordKernel = j[0]
-            print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+            #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
             aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
             if (aux<minValue):
                 minValue = aux

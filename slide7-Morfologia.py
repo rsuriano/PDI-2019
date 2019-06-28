@@ -6,7 +6,6 @@ Created on Fri Jun 28 15:29:20 2019
 """
 
 import imageio
-from scipy import fftpack
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
@@ -21,22 +20,9 @@ imagen = np.clip(imagen,0.,1.)
 plt.figure(0)
 plt.imshow(imagen,'gray')
 
-imagenErosionada = np.zeros(imagen.shape)
-squaredCircle = np.zeros((3,3))
-print(imagenErosionada.shape)
-for i in np.ndenumerate(imagen):
-    minValue = 1.
-    coordImg = i[0]
-    if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
-        for j in np.ndenumerate(squaredCircle):
-            coordKernel = j[0]
-            #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
-            aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-            if (aux<minValue):
-                minValue = aux
-        for k in np.ndenumerate(squaredCircle):
-            cordKernel = k[0]
-            imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue
-    
+img2 = tools.erode(imagen)
+img2 = tools.dilate(img2)
+img2 = tools.erode(img2)
+
 plt.figure(1)
-plt.imshow(imagenErosionada, 'gray')
+plt.imshow(img2, 'gray')

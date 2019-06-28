@@ -155,3 +155,56 @@ def fourier_undo(mag,fase):
 
     
 
+#Erosion - Slide 7
+def erode(imagen):
+    print(imagen.shape)
+    imagenErosionada = np.zeros(imagen.shape)
+    squaredCircle = np.zeros((3,3))
+    """
+    prog25 = (np.trunc(imagen.shape[0]/4), imagen.shape[1])
+    prog50 = (np.trunc(imagen.shape[0]/2), imagen.shape[1])
+    prog75 = (np.trunc(imagen.shape[0]*(3/4)), imagen.shape[1])
+    """ 
+    for i in np.ndenumerate(imagen):
+        minValue = 1.
+        coordImg = i[0]
+        if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+            for j in np.ndenumerate(squaredCircle):
+                coordKernel = j[0]
+                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                if (aux<minValue):
+                    minValue = aux
+            for k in np.ndenumerate(squaredCircle):
+                coordKernel = k[0]
+                imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue
+        """
+        if (coordImg == prog25):
+            print("25% completado")
+        if coordImg[0] == prog50:
+            print("50% completado")
+        if coordImg[0] == prog75:
+            print("75% completado")"""
+            
+    return imagenErosionada
+
+def dilate(imagen):
+    print(imagen.shape)
+    imagenDilatada = np.zeros(imagen.shape)
+    squaredCircle = np.zeros((3,3))
+    for i in np.ndenumerate(imagen):
+        maxValue = 0.
+        coordImg = i[0]
+        if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+            for j in np.ndenumerate(squaredCircle):
+                coordKernel = j[0]
+                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                if (aux>maxValue):
+                    maxValue = aux
+            for k in np.ndenumerate(squaredCircle):
+                coordKernel = k[0]
+                imagenDilatada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = maxValue
+                
+            
+    return imagenDilatada

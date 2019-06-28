@@ -7,6 +7,8 @@ Created on Fri May 17 17:40:09 2019
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import fftpack
+import imageio
 
 #Conversión RGB/YIQ
 def convert_to(space,image): 
@@ -125,3 +127,31 @@ def histogramaY(image, bars):
     
     plt.bar(names,histogram, width=bars/20)
     return histogramaY
+
+
+#Fourier Slides-5
+def fourier(imagen):
+    #recibe una imagen y devuelve la magnitud y fase de la transformada
+    transformada = np.zeros(imagen.shape)
+    transformada = fftpack.fft2(imagen)
+    #centrar la frecuencia cero en el centro
+    transformada = fftpack.fftshift(transformada)
+    #obtener la magnitud
+    magnitud = np.abs(transformada)
+    #obtener la fase
+    fase = np.angle(transformada)
+    tuple_return = (magnitud,fase)
+    
+    return tuple_return
+
+def fourier_undo(mag,fase):
+    #recibe mag y fase de una transformada y la invierte
+    transformada = mag * (np.cos(fase)+np.sin(fase)*1j)
+    transformada = fftpack.ifftshift(transformada)
+    inversa = fftpack.ifft2(transformada)   
+    inversa = np.abs(inversa)
+    
+    return inversa
+
+    
+

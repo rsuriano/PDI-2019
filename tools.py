@@ -123,9 +123,9 @@ def histogramaY(image, bars):
     for i in np.ndenumerate(image):
         # desnormalizo el valor de luminancia, lo trunco y lo asigno a su 
         # barra correspondiente en el histograma
-        histogram[int(np.trunc(i[1]*bars))] +=1/np.prod(image.shape)
+        histogram[int(np.trunc(i[1]*bars))] +=1/np.prod(image.shape)#puede estar no normalizado
     
-    plt.bar(names,histogram, width=bars/20)
+    plt.bar(names,histogram, width=bars/20)#devolver array y plotear en el programa principal
     return histogramaY
 
 

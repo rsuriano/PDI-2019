@@ -118,15 +118,13 @@ def ifDarker(image1,image2):
 def histogramaY(image, bars):
     
     histogram = np.zeros(bars+1)
-    names = np.arange(0,len(histogram))
-    
+
     for i in np.ndenumerate(image):
         # desnormalizo el valor de luminancia, lo trunco y lo asigno a su 
         # barra correspondiente en el histograma
         histogram[int(np.trunc(i[1]*bars))] +=1/np.prod(image.shape)#puede estar no normalizado
     
-    plt.bar(names,histogram, width=bars/20)#devolver array y plotear en el programa principal
-    return histogramaY
+    return histogram
 
 
 #Fourier Slides-5
@@ -141,7 +139,6 @@ def fourier(imagen):
     #obtener la fase
     fase = np.angle(transformada)
     tuple_return = (magnitud,fase)
-    
     return tuple_return
 
 def fourier_undo(mag,fase):
@@ -150,7 +147,6 @@ def fourier_undo(mag,fase):
     transformada = fftpack.ifftshift(transformada)
     inversa = fftpack.ifft2(transformada)   
     inversa = np.abs(inversa)
-    
     return inversa
 
     
@@ -179,14 +175,6 @@ def erode(imagen, times):
                 for k in np.ndenumerate(squaredCircle):
                     coordKernel = k[0]
                     imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue
-            """
-            if (coordImg == prog25):
-                print("25% completado")
-            if coordImg[0] == prog50:
-                print("50% completado")
-            if coordImg[0] == prog75:
-                print("75% completado")"""
-            
     return imagenErosionada
 
 def dilate(imagen, times):
@@ -207,6 +195,14 @@ def dilate(imagen, times):
                 for k in np.ndenumerate(squaredCircle):
                     coordKernel = k[0]
                     imagenDilatada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = maxValue
-                
-            
     return imagenDilatada
+
+def apertura(imagen):
+    imagenProcesada = erode(imagen)
+    imagenProcesada = dilate(imagenProcesada)
+    return imagenProcesada
+
+def cierre(imagen):
+    imagenProcesada = dilate(imagen)
+    imagenProcesada = erode(imagenProcesada)
+    return imagenProcesada

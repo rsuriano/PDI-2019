@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import tools
 
 columnQty = 10
-escalar = 1
-filtro = 3
+escalar = 1.5
+filtro = 1
 Ymin = 0.1
 Ymax = 1
 """
@@ -34,11 +34,13 @@ img_Y = img_YIQ[:,:,0]
 #Plots original image and luminance histogram
 plt.figure(1)
 plt.imshow(img)
+
+hist1 = tools.histogramaY(img_Y, columnQty)
+names = np.arange(0,len(hist1))
 plt.figure(2)
-tools.histogramaY(img_Y, columnQty)
+plt.bar(names,hist1, width=columnQty/20)
 
-
-"""Applies luminance change to a copy of img
+"""Applies luminance change to a copy of img"""
 img2_YIQ = img_YIQ
 img2_YIQ[:,:,0] *= escalar
 img2_Y = np.clip(img2_YIQ[:,:,0],0.,1.)
@@ -49,8 +51,11 @@ img2_RGB = tools.convert_to("RGB", img2_YIQ)
 #Plots altered image
 plt.figure(3)
 plt.imshow(img2_RGB)
+
+hist2 = tools.histogramaY(img2_YIQ[:,:,0], columnQty)
+names = np.arange(0, len(hist2))
 plt.figure(4)
-tools.histogramaY(img2_YIQ[:,:,0], columnQty)"""
+plt.bar(names, hist2, width = columnQty/20)
 
 
 """Filters the image"""
@@ -75,5 +80,8 @@ filteredImg_RGB = tools.convert_to("RGB", filteredImg_YIQ)
 #Plots filtered image
 plt.figure(5)
 plt.imshow(filteredImg_RGB)
+
+histFiltro = tools.histogramaY(filteredImg_YIQ[:,:,0], columnQty)
+names = np.arange(0,len(histFiltro))
 plt.figure(6)
-tools.histogramaY(filteredImg_YIQ[:,:,0], columnQty)
+plt.bar(names,histFiltro, width=columnQty/20)

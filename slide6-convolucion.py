@@ -18,6 +18,7 @@ imagen = imageio.imread(imgpath.format(imgName))
 imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
 imagen = np.clip(imagen,0.,1.)
 
+print("0 - Identidad")
 print("1 - Pasa Bajos Plano 3x3")
 print("2 - Pasa Bajos Bartlett 3x3")
 print("3 - Pasa Bajos Bartlett 5x5")
@@ -27,19 +28,24 @@ print("6 - Pasa Bajos Gaussiano 7x7")
 print("7 - Laplaciano v4")
 print("8 - Laplaciano v8")
 
-opcion = input('Elija operación (de 1 a 8): ')
+opcion = input('Elija operación (de 0 a 8): ')
 
 plt.figure(0)
 plt.imshow(imagen,'gray')
 
 
-#Filtro pasabajos plano 3x3
+#Index de Filtros
+identidad = np.matrix([[0, 0, 0], [0, 1, 0], [0, 0, 0]]) #FUNCIONA
 pasaBajos3 = np.ones((3,3))/9
-bartlett3 = [[-1, 2, -1], [-2, 4, -2], [1, -2, 1]]
+#bartlett3 = np.array([[1., -2., 1.], [-2., 4., -2.], [1., -2., 1.]])
+bartlett3 = np.matrix([[-1., -1., -1.], [-1., 8, -1.], [-1., -1., -1.]]) 
+
 bartlett5 = [[-1, 2, -1], [-2, 4, -2], [1, -2, 1], [], []]
 
-
-if opcion=='1':
+if opcion=='0':
+    margen = 2
+    filtro = identidad
+elif opcion=='1':
     margen = 2
     filtro = pasaBajos3
 elif opcion =='2':
@@ -58,7 +64,7 @@ for i in np.ndenumerate(imagenFiltrada):
             #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
             convolucion += imagenFiltrada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
     
-        imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
+        imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion #/255 normalizandolo tmp funciona
     
 plt.figure(1)
 plt.imshow(imagenFiltrada, 'gray')

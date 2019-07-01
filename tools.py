@@ -151,16 +151,11 @@ def fourier_undo(mag,fase):
 
     
 
-#Erosion - Slide 7
+#Filtros morfologicos - Slide 7
 def erosionar(imagen, times):
-    print(imagen.shape)
+    print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)
     squaredCircle = np.zeros((3,3))
-    """
-    prog25 = (np.trunc(imagen.shape[0]/4), imagen.shape[1])
-    prog50 = (np.trunc(imagen.shape[0]/2), imagen.shape[1])
-    prog75 = (np.trunc(imagen.shape[0]*(3/4)), imagen.shape[1])
-    """ 
     for x in range(times):
         for i in np.ndenumerate(imagen):
             minValue = 1.
@@ -174,11 +169,11 @@ def erosionar(imagen, times):
                         minValue = aux
                 for k in np.ndenumerate(squaredCircle):
                     coordKernel = k[0]
-                    imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue
+                    imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue 
     return imagenErosionada
 
 def dilatar(imagen, times):
-    print(imagen.shape)
+    print("Dilatando, tamaño {}".format(imagen.shape))
     imagenDilatada = np.zeros(imagen.shape)
     squaredCircle = np.zeros((3,3))
     for x in range(times):
@@ -188,7 +183,7 @@ def dilatar(imagen, times):
             if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
                 for j in np.ndenumerate(squaredCircle):
                     coordKernel = j[0]
-                    #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                    print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
                     aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
                     if (aux>maxValue):
                         maxValue = aux
@@ -198,21 +193,43 @@ def dilatar(imagen, times):
     return imagenDilatada
 
 def apertura(imagen):
+    print("Apertura...")
     imagenProcesada = erosionar(imagen, 1)
     imagenProcesada = dilatar(imagenProcesada, 1)
     return imagenProcesada
 
 def cierre(imagen):
+    print("Cierre...")
     imagenProcesada = dilatar(imagen, 1)
     imagenProcesada = erosionar(imagenProcesada, 1)
     return imagenProcesada
 
 def borde(imagen):
+    print("Borde morfologico...")
     imagenDilatada = dilatar(imagen, 1)
     imagenProcesada = imagenDilatada - imagen
     return imagenProcesada
 
+def mediana(imagen, times):
+    print("Filtro Mediana, tamaño {}".format(imagen.shape))
+    imagenMediana = np.zeros(imagen.shape)
+    squaredCircle = np.zeros((3,3))
+    for x in range(times):
+        for i in np.ndenumerate(imagen):
+            carryMediana = 0.
+            coordImg = i[0]
+            if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+                for j in np.ndenumerate(squaredCircle):
+                    coordKernel = j[0]
+                    aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                    carryMediana += aux
+                for k in np.ndenumerate(squaredCircle):
+                    coordKernel = k[0]
+                    imagenMediana[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = carryMediana/9
+    return imagenMediana
+
 def topHat(imagen):
+    print("Top Hat...")
     imagenApertura = apertura(imagen)
     imagenProcesada = imagen - imagenApertura
     return imagenProcesada

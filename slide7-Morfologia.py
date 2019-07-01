@@ -14,14 +14,20 @@ import tools
 imgpath = "images\slides7 - Morphology\{}.png"
 imgName = input("Select image name: ")
 imagen = imageio.imread(imgpath.format(imgName))
-imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
+#normalizacion
+if len(imagen.shape)>2:
+    imagen = imagen[:,:,0]/255. 
+else:
+    imagen = imagen/255. 
 imagen = np.clip(imagen,0.,1.)
 
 plt.figure(0)
 plt.imshow(imagen,'gray')
 
-img2 = tools.erode(imagen,5)
-#img2 = tools.dilate(img2,1)
+#img2 = tools.erosionar(imagen,5)
+#img2 = tools.dilatar(img2,1)
+#img2 = tools.apertura(imagen)
+img2 = tools.topHat(imagen)
 
 plt.figure(1)
 plt.imshow(img2, 'gray')

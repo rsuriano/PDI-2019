@@ -152,7 +152,7 @@ def fourier_undo(mag,fase):
     
 
 #Erosion - Slide 7
-def erode(imagen, times):
+def erosionar(imagen, times):
     print(imagen.shape)
     imagenErosionada = np.zeros(imagen.shape)
     squaredCircle = np.zeros((3,3))
@@ -177,7 +177,7 @@ def erode(imagen, times):
                     imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue
     return imagenErosionada
 
-def dilate(imagen, times):
+def dilatar(imagen, times):
     print(imagen.shape)
     imagenDilatada = np.zeros(imagen.shape)
     squaredCircle = np.zeros((3,3))
@@ -198,11 +198,21 @@ def dilate(imagen, times):
     return imagenDilatada
 
 def apertura(imagen):
-    imagenProcesada = erode(imagen)
-    imagenProcesada = dilate(imagenProcesada)
+    imagenProcesada = erosionar(imagen, 1)
+    imagenProcesada = dilatar(imagenProcesada, 1)
     return imagenProcesada
 
 def cierre(imagen):
-    imagenProcesada = dilate(imagen)
-    imagenProcesada = erode(imagenProcesada)
+    imagenProcesada = dilatar(imagen, 1)
+    imagenProcesada = erosionar(imagenProcesada, 1)
+    return imagenProcesada
+
+def borde(imagen):
+    imagenDilatada = dilatar(imagen, 1)
+    imagenProcesada = imagenDilatada - imagen
+    return imagenProcesada
+
+def topHat(imagen):
+    imagenApertura = apertura(imagen)
+    imagenProcesada = imagen - imagenApertura
     return imagenProcesada

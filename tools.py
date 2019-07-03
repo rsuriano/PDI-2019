@@ -161,7 +161,7 @@ def convolucionar(imagen, kernel):
                 convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
         
             imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
-
+    return imagenFiltrada
 
 #Filtros morfologicos - Slides 7
 def erosionar(imagen, times):

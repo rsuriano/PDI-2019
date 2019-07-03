@@ -5,6 +5,15 @@ Created on Fri Jun 28 01:42:05 2019
 @author: Usuario
 """
 
+
+   """
+     si un kernel es mas grande el filtro es de menor frecuencia
+     
+     traslacion: 
+         0 0 1
+         0 0 0
+         0 0 0
+   """
 import imageio
 from scipy import fftpack
 import numpy as np
@@ -27,8 +36,9 @@ print("5 - Pasa Bajos Gaussiano 5x5")
 print("6 - Pasa Bajos Gaussiano 7x7")
 print("7 - Laplaciano v4")
 print("8 - Laplaciano v8")
+print("9 - Sobel")
 
-opcion = input('Elija operación (de 0 a 8): ')
+opcion = input('Elija operación (de 0 a 9): ')
 
 plt.figure(0)
 plt.imshow(imagen,'gray')
@@ -41,6 +51,8 @@ pasaBajos3 = np.ones((3,3))/9
 bartlett3 = np.matrix([[-1., -1., -1.], [-1., 8, -1.], [-1., -1., -1.]]) 
 
 bartlett5 = [[-1, 2, -1], [-2, 4, -2], [1, -2, 1], [], []]
+sobelX = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]] #derivada en x
+sobelY = [[-2, -1, -2], [0, 0, 0], [2, 1, 2]] #derivada en y
 
 if opcion=='0':
     margen = 2
@@ -51,20 +63,37 @@ elif opcion=='1':
 elif opcion =='2':
     margen = 2
     filtro = bartlett3
+if opcion=='9':
+    filtro = sobelX
+if opcion=='10':
+    filtro = sobelY
     
+    imagenFiltrada = np.zeros(imagen.shape)
+    
+    for i in np.ndenumerate(imagen):
+        convolucion = 0.
+        coordImg = i[0]
+        if coordImg[0]<len(imagenFiltrada[0])-margen and coordImg[1]<len(imagenFiltrada[0])-margen:  
+            for j in np.ndenumerate(filtro):
+                coordKernel = j[0]
+                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
+        
+            imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion #/255 normalizandolo tmp funciona
 
-imagenFiltrada = imagen
+"""
+imagenFiltrada = np.zeros(imagen.shape)
 
-for i in np.ndenumerate(imagenFiltrada):
+for i in np.ndenumerate(imagen):
     convolucion = 0.
     coordImg = i[0]
     if coordImg[0]<len(imagenFiltrada[0])-margen and coordImg[1]<len(imagenFiltrada[0])-margen:  
         for j in np.ndenumerate(filtro):
             coordKernel = j[0]
             #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
-            convolucion += imagenFiltrada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
+            convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
     
         imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion #/255 normalizandolo tmp funciona
-    
+   """ 
 plt.figure(1)
 plt.imshow(imagenFiltrada, 'gray')

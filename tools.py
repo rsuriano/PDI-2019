@@ -155,6 +155,8 @@ def fourier_undo(mag,fase):
 def erosionar(imagen, times):
     print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)
+    """ el elemento estructurante tiene que ser una variable de la funcion"""
+    """ canny edge detection """
     squaredCircle = np.zeros((3,3))
     for x in range(times):
         for i in np.ndenumerate(imagen):

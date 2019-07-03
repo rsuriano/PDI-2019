@@ -149,14 +149,27 @@ def fourier_undo(mag,fase):
     inversa = np.abs(inversa)
     return inversa
 
-    
+#Convolucion - Slide 6
+def convolucionar(imagen, kernel):
+    imagenFiltrada = np.zeros(imagen.shape)
+    margen = kernel.shape[0] - 1
+    for i in np.ndenumerate(imagen):
+        convolucion = 0.
+        coordImg = i[0]
+        if coordImg[0]<len(imagenFiltrada[0])-margen and coordImg[1]<len(imagenFiltrada[0])-margen:  
+            for j in np.ndenumerate(kernel):
+                coordKernel = j[0]
+                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
+        
+            imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
 
 #Filtros morfologicos - Slide 7
 def erosionar(imagen, times):
     print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)
     """ el elemento estructurante tiene que ser una variable de la funcion"""
-    """ canny edge detection """
+    
     squaredCircle = np.zeros((3,3))
     for x in range(times):
         for i in np.ndenumerate(imagen):
@@ -180,7 +193,7 @@ def dilatar(imagen, times):
     squaredCircle = np.zeros((3,3))
     for x in range(times):
         for i in np.ndenumerate(imagen):
-            maxValue = 0.
+            maxValue = 0.4
             coordImg = i[0]
             if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
                 for j in np.ndenumerate(squaredCircle):

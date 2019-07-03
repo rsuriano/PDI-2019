@@ -18,7 +18,6 @@ Created on Fri Jun 28 01:42:05 2019
 
 """
 import imageio
-from scipy import fftpack
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
@@ -47,37 +46,50 @@ plt.figure(0)
 plt.imshow(imagen,'gray')
 
 
-#Index de Kernels
-identidad = np.matrix([[0, 0, 0], [0, 1, 0], [0, 0, 0]])
-pasaBajos3 = np.ones((3,3))/9
+#PasaBajos:
+identidad = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+plano3 = np.ones((3,3))/9
 bartlett3 = [[1, 2, 1], [2, 4, 2], [1, 2, 1]]/16
 bartlett5 = [   [1, 2, 3, 2, 1]
                 [2, 4, 6, 4, 2]
                 [3, 6, 9, 6, 3]
                 [2, 4, 6, 4, 2]
                 [1, 2, 3, 2, 1]]/81
-gaussiano3 = [[1, 2, 1], [2, 4, 2], [1, 2, 1]]/16
+bartlett7 = [   [1, 2,  3,  4,  3,  2,  1]
+                [2, 4,  6,  8,  6,  4,  2]
+                [3, 6,  9,  12, 9,  6,  3]
+                [4, 8,  12, 16, 12, 8,  4]
+                [3, 6,  9,  12, 9,  6,  3]
+                [2,	4,  6,	8,	6,	4,  2]
+                [1,	2,	3,	4,	3,	2,  1]]/256
 gaussiano5 = [  [1, 4,  6,  4,  1]
                 [4, 16, 24, 16, 4]
                 [6, 24, 36, 24, 6]
                 [4, 16, 24, 16, 4]
                 [1, 4,  6,  4,  1]]/256
-sobelX = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]] #derivada en x
-sobelY = [[-2, -1, -2], [0, 0, 0], [2, 1, 2]] #derivada en y
+gaussiano7 = [  [1,     6,     15,     20,     5,     6,     1]
+                [6,     36,	   90,	   120,    90,    36,    6]
+                [15,    90,    225,    300,    225,   90,   15]
+                [20,	120,   300,    400,    300,   120,  20]
+                [15,	90,    225,	   300,    225,   90,   15]
+                [6,     36,    90,     120,    90,    36,    6]
+                [1,	    6,     15,     20,     15,    6,     1]]/4096
 
-if opcion=='0':
-    margen = 2
-    filtro = identidad
-elif opcion=='1':
-    margen = 2
-    filtro = pasaBajos3
-elif opcion =='2':
-    margen = 2
-    filtro = bartlett3
-if opcion=='9':
-    filtro = sobelX
-if opcion=='10':
-    filtro = sobelY
+#Detectores de bordes
+laplacianoV4 =  [[0, -1, 0] [-1, 4, -1] [0, -1, 0]]
+laplacianoV8 = [[-1, -1, -1] [-1, 8, -1] [-1, -1, -1]]
+sobelXleft = [[1, 0, -1], [2, 0, -2], [1, 0, -1]]   #Eje X hacia la izquierda
+sobelXright = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]  #Eje X hacia la derecha
+sobelYup = [[2, 1, 2] [0, 0, 0] [-2, -1, -2]]       #Eje Y hacia arriba
+sobelYdown = [[-2, -1, -2], [0, 0, 0], [2, 1, 2]]   #Eje Y hacia abajo
+sobelD1 = [[-2, -1, 0], [-1, 0, 1], [0, 1, 2]] #Diagonal topLeft->bottomRight
+sobelD2 = [[0, -1, -2], [1, 0, -1], [2, 1, 0]] #Diagonal topRight->bottomLeft
+sobelD3 = [[0, 1, 2], [-1, 0, 1], [-2, -1, 0]] #Diagonal bottomLeft->topRight
+sobelD4 = [[2, 1, 0], [1, 0, -1], [0, -1, -2]] #Diagonal bottomRight->topLeft
+
+pasaBanda = np.zeros(3,3)
+pasaAltos02 = np.zeros(3,3)
+pasaAltos04 = np.zeros(5,5)
     
 imagenFiltrada = tools.convolucionar()
 

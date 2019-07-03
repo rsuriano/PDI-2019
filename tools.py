@@ -8,9 +8,8 @@ Created on Fri May 17 17:40:09 2019
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fftpack
-import imageio
 
-#Conversión RGB/YIQ
+#Conversión RGB/YIQ - Slides 2
 def convert_to(space,image): 
     #esta funcion convierte una matriz 'image' al espacio cromático indicado en 'space'
     imageRet = np.zeros(image.shape)
@@ -29,7 +28,7 @@ def convert_to(space,image):
         return imageRet
 
 
-#Colormaps Slide 2
+#Colormaps - Slides 2
 def showColormaps (image):
     plt.imshow(image)
     plt.show()
@@ -51,7 +50,7 @@ def showColormaps (image):
     return 0    
     
 
-##  Aritmetica de pixels
+#Aritmetica de pixels - Slides 3
 def sumaClampeadaRGB(image1,image2):
     image3 = image1 + image2
     image3 = np.clip(image3,0.,1.)
@@ -113,8 +112,7 @@ def ifDarker(image1,image2):
     return image3
 
 
-#Histograma de luminancias
-#Recibe la capa Y de una imagen, y plotea el histograma
+#Luminancia - Slides 4 - Histograma de luminancias
 def histogramaY(image, bars):
     
     histogram = np.zeros(bars+1)
@@ -127,7 +125,7 @@ def histogramaY(image, bars):
     return histogram
 
 
-#Fourier Slides-5
+#Fourier - Slides 5
 def fourier(imagen):
     #recibe una imagen y devuelve la magnitud y fase de la transformada
     transformada = np.zeros(imagen.shape)
@@ -149,22 +147,23 @@ def fourier_undo(mag,fase):
     inversa = np.abs(inversa)
     return inversa
 
-#Convolucion - Slide 6
+
+#Convolucion - Slides 6
 def convolucionar(imagen, kernel):
     imagenFiltrada = np.zeros(imagen.shape)
     margen = kernel.shape[0] - 1
     for i in np.ndenumerate(imagen):
         convolucion = 0.
         coordImg = i[0]
-        if coordImg[0]<len(imagenFiltrada[0])-margen and coordImg[1]<len(imagenFiltrada[0])-margen:  
+        if coordImg[0]<imagen.shape[0]-margen and coordImg[1]<imagen.shape[0]-margen:  
             for j in np.ndenumerate(kernel):
                 coordKernel = j[0]
-                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
                 convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
         
             imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
 
-#Filtros morfologicos - Slide 7
+
+#Filtros morfologicos - Slides 7
 def erosionar(imagen, times):
     print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)

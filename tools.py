@@ -166,7 +166,7 @@ def convolucionar(img, kernel):
         convolucion = 0.
         coordImg = i[0]
         if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen): 
-            print(coordImg)
+            #print(coordImg)
             for j in np.ndenumerate(kernel):
                 coordKernel = j[0]
                 convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]

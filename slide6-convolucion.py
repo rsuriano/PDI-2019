@@ -14,7 +14,11 @@ import tools
 imgpath = "images\slides6 - Convolution\{}.png"
 imgName = input("Select image name: ")
 imagen = imageio.imread(imgpath.format(imgName))
-imagen = imagen[:,:,0]/255. #lo divido por 255 para cambiarlo de unit8
+#Normalization
+if len(imagen.shape)>2:
+    imagen = imagen[:,:,0]/255. 
+else:
+    imagen = imagen/255. 
 imagen = np.clip(imagen,0.,1.)
 
 plt.figure(0)
@@ -73,7 +77,7 @@ pasaAltos02 = identidad5 - gaussiano5
 pasaAltos04 = identidad5 - gaussiano3
 
 """Main program"""
-filtro = bartlett7
+filtro = laplacianoV8
 imagenFiltrada = tools.convolucionar(imagen, filtro)
 imagenFiltrada = tools.clipImg(imagenFiltrada)
 
@@ -81,7 +85,7 @@ plt.figure(1)
 plt.imshow(imagenFiltrada, 'gray')
 
 
-"""
+
 #Sobel filters
 imgSobelX = tools.convolucionar(imagen, sobelXright)
 imgSobelY = tools.convolucionar(imagen, sobelYup)
@@ -102,9 +106,9 @@ imgSobel[:,:,0] = magnitudSobel
 imgSobel[:,:,1] = faseSobel
 
 imgSobelRGB = tools.convert_to('RGB', imgSobel)
-""
+
 plt.figure(2)
 plt.imshow(magnitudSobel, 'gray')
 
 plt.figure(3)
-plt.imshow(imgSobelRGB)"""
+plt.imshow(imgSobelRGB)

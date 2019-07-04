@@ -53,9 +53,10 @@ prom = 0
 
 if opcion == '0':
     #Downsampling constante x2
-    while normal_y <= imagen.shape[1]-1:
-        while normal_x <= imagen.shape[0]-1:
+    while normal_y <= alto-1:
+        while normal_x <= largo-1:
             downsizing[coordenadaX,coordenadaY] = imagen[normal_x,normal_y]
+            
             normal_x = normal_x+2
             coordenadaX = coordenadaX + 1
         normal_y = normal_y+2
@@ -68,10 +69,11 @@ if opcion == '0':
         
 elif opcion == '1':
     #Downsampling bilineal x2
-    while normal_y <= imagen.shape[1]-1:
-        while normal_x <= imagen.shape[0]-1:
+    while normal_y <= alto-1:
+        while normal_x <= largo-1:
             prom = (imagen[normal_x,normal_y]+imagen[normal_x+1,normal_y]+imagen[normal_x,normal_y+1]+imagen[normal_x+1,normal_y+1])/4
             downsizing[coordenadaX,coordenadaY] = prom 
+            
             normal_x = normal_x+2
             coordenadaX = coordenadaX + 1
         normal_y = normal_y+2
@@ -84,12 +86,13 @@ elif opcion == '1':
     
 elif opcion == '3':
     #Upsampling constante x2
-    while normal_y <= imagen.shape[1]-1:
-        while normal_x <= imagen.shape[0]-1:
-            upsizing[coordenadaX,coordenadaY] = imagen[normal_x,normal_y]
-            upsizing[coordenadaX+1,coordenadaY] = imagen[normal_x,normal_y]
-            upsizing[coordenadaX,coordenadaY+1] = imagen[normal_x,normal_y]
+    while normal_y <= alto-1:
+        while normal_x <= largo-1:
+            upsizing[coordenadaX,coordenadaY]     = imagen[normal_x,normal_y]
+            upsizing[coordenadaX+1,coordenadaY]   = imagen[normal_x,normal_y]
+            upsizing[coordenadaX,coordenadaY+1]   = imagen[normal_x,normal_y]
             upsizing[coordenadaX+1,coordenadaY+1] = imagen[normal_x,normal_y]
+            
             normal_x = normal_x+1
             coordenadaX = coordenadaX + 2
         normal_y = normal_y+1
@@ -102,15 +105,30 @@ elif opcion == '3':
     
 elif opcion == '4':
     #Upsampling bilineal x2
-    while normal_y <= imagen.shape[1]-1:
-        while normal_x <= imagen.shape[0]-1:
-            upsizing[coordenadaX,coordenadaY] = imagen[normal_x,normal_y]
+    #np.insert(imagen,largo,imagen[largo-1],axis=0)
+    #np.insert(imagen,alto,imagen[alto-1],axis=1)
+    #plt.figure(0)
+    #plt.imshow(imagen,'gray')
+    #print (largo)
+    #print (alto)
+    while normal_y <= alto-1:
+        while normal_x <= largo-1:
+            if normal_x == 63:
+                normal_x = 62
+            if normal_y == 63:
+                normal_y = 62
+            
+            upsizing[coordenadaX,coordenadaY]     = imagen[normal_x,normal_y]
+            
             promX = imagen[normal_x,normal_y]+imagen[normal_x+1,normal_y]/2
-            upsizing[coordenadaX+1,coordenadaY] = promX
+            upsizing[coordenadaX+1,coordenadaY]   = promX
+            
             promY = imagen[normal_x,normal_y]+imagen[normal_x,normal_y+1]/2
-            upsizing[coordenadaX,coordenadaY+1] = promY
+            upsizing[coordenadaX,coordenadaY+1]   = promY
+            
             prom = (promX+promY)/2
             upsizing[coordenadaX+1,coordenadaY+1] = prom
+            
             normal_x = normal_x+1
             coordenadaX = coordenadaX + 2
         normal_y = normal_y+1

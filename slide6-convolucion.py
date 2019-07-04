@@ -73,7 +73,7 @@ pasaAltos02 = identidad5 - gaussiano5
 pasaAltos04 = identidad5 - gaussiano3
 
 ##Main program##
-filtro = laplacianoV4
+filtro = pasaAltos02
 imagenFiltrada = tools.convolucionar(imagen, filtro)
 imagenFiltrada = tools.clipImg(imagenFiltrada)
 
@@ -103,9 +103,9 @@ imgSobel[:,:,0] = magnitudSobel
 imgSobel[:,:,1] = faseSobel
 
 imgSobelRGB = tools.convert_to('RGB', imgSobel)
-
+"""
 plt.figure(2)
 plt.imshow(magnitudSobel, 'gray')
 
 plt.figure(3)
-plt.imshow(imgSobelRGB)
+plt.imshow(imgSobelRGB)"""

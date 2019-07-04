@@ -9,6 +9,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fftpack
 
+#Clipping images - Misc
+def clipImg(image):
+    if (np.amin(image)<0 or np.amax(image)>1):
+        clippedImg = np.clip(image, 0., 1.)
+        return clippedImg
+    else:
+        return image
+        
 #Conversión RGB/YIQ - Slides 2
 def convert_to(space,image): 
     #esta funcion convierte una matriz 'image' al espacio cromático indicado en 'space'
@@ -149,18 +157,52 @@ def fourier_undo(mag,fase):
 
 
 #Convolucion - Slides 6
-def convolucionar(imagen, kernel):
+def convolucionar(img, kernel):
+    borde = int(kernel.shape[1]/2)
+    imagen = expandirLimites(img, borde)
     imagenFiltrada = np.zeros(imagen.shape)
     margen = kernel.shape[0] - 1
     for i in np.ndenumerate(imagen):
         convolucion = 0.
         coordImg = i[0]
-        if coordImg[0]<imagen.shape[0]-margen and coordImg[1]<imagen.shape[0]-margen:  
+        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen): 
+            #print(coordImg)
             for j in np.ndenumerate(kernel):
                 coordKernel = j[0]
                 convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
         
-            imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
+            imagenFiltrada[coordImg[0]+int(kernel.shape[0]/2), coordImg[1]+int(kernel.shape[0]/2)] = convolucion
+    imagenSalida = quitarLimites(imagenFiltrada, borde)
+    return imagenSalida
+
+#Agregar contorno a imagen - Slide 6
+def expandirLimites(img, margin):
+    newImg = np.zeros((img.shape[0]+2*margin, img.shape[1]+2*margin))
+    
+    for i in np.ndenumerate(newImg):
+        nImgCoord = i[0]
+        
+        #Copy img at the center of newImg
+        if (nImgCoord[0]<newImg.shape[0]-2*margin and nImgCoord[1]<newImg.shape[1]-2*margin):
+            newImg[(nImgCoord[0]+margin, nImgCoord[1]+margin)] = img[nImgCoord] 
+    
+    for a in range(0, margin):
+        newImg[a,:] = newImg[margin,:]
+        newImg[:,a] = newImg[:,margin]
+        newImg[newImg.shape[0]-(margin-a), :] = newImg[newImg.shape[0]-margin-1, :]
+        newImg[:, newImg.shape[0]-(margin-a)] = newImg[:, newImg.shape[0]-margin-1]
+    return newImg
+
+#Eliminar contorno de la imagen - Slide 6
+def quitarLimites(img, margin):
+    #Get original img
+    origImg = np.zeros((img.shape[0]-2*margin, img.shape[1]-2*margin))
+    for i in np.ndenumerate(img):
+        nImgCoord = i[0]
+        
+        if (0 < nImgCoord[0]<img.shape[0]-margin) and  (0 < nImgCoord[1]<img.shape[1]-margin):
+            origImg[(nImgCoord[0]-margin, nImgCoord[1]-margin)] = img[nImgCoord] 
+    return origImg
 
 
 #Filtros morfologicos - Slides 7

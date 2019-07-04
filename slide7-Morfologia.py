@@ -35,13 +35,16 @@ print("7 - Tophat")
 sequence = input("Seleccione secuencia de filtros: ")
 sequence = sequence.split(' ')
 
+elementoEstructurante = np.ones((3,3))
+
+
 for i in sequence:
     filtro = int(i)
     if filtro == 1:
-        img2 = tools.erosionar(imagen, 1)
+        img2 = tools.erosionar(imagen, elementoEstructurante)
         
     if filtro == 2:
-        img2 = tools.dilatar(imagen, 1)
+        img2 = tools.dilatar(imagen, elementoEstructurante)
         
     if filtro == 3:
         img2 = tools.apertura(imagen)
@@ -53,7 +56,7 @@ for i in sequence:
         img2 = tools.borde(imagen)
         
     if filtro == 6:
-        img2 = tools.mediana(imagen, 1)
+        img2 = tools.mediana(imagen, elementoEstructurante)
     
     if filtro == 7:
         img2 = tools.topHat(imagen)

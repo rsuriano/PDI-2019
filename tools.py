@@ -206,46 +206,44 @@ def quitarLimites(img, margin):
 
 
 #Filtros morfologicos - Slides 7
-def erosionar(imagen, times):
+def erosionar(imagen, kernel):
     print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)
     """ el elemento estructurante tiene que ser una variable de la funcion"""
     
-    squaredCircle = np.zeros((3,3))
-    for x in range(times):
-        for i in np.ndenumerate(imagen):
-            minValue = 1.
-            coordImg = i[0]
-            if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
-                for j in np.ndenumerate(squaredCircle):
-                    coordKernel = j[0]
-                    #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
-                    aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                    if (aux<minValue):
-                        minValue = aux
-                for k in np.ndenumerate(squaredCircle):
-                    coordKernel = k[0]
-                    imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue 
+    structElement = kernel
+    for i in np.ndenumerate(imagen):
+        minValue = 1.
+        coordImg = i[0]
+        if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+            for j in np.ndenumerate(structElement):
+                coordKernel = j[0]
+                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                if (aux<minValue and  structElement[coordKernel]):
+                    minValue = aux
+            for k in np.ndenumerate(structElement):
+                coordKernel = k[0]
+                imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue 
     return imagenErosionada
 
-def dilatar(imagen, times):
+def dilatar(imagen, kernel):
     print("Dilatando, tamaño {}".format(imagen.shape))
     imagenDilatada = np.zeros(imagen.shape)
-    squaredCircle = np.zeros((3,3))
-    for x in range(times):
-        for i in np.ndenumerate(imagen):
-            maxValue = 0.4
-            coordImg = i[0]
-            if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
-                for j in np.ndenumerate(squaredCircle):
-                    coordKernel = j[0]
-                    print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
-                    aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                    if (aux>maxValue):
-                        maxValue = aux
-                for k in np.ndenumerate(squaredCircle):
-                    coordKernel = k[0]
-                    imagenDilatada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = maxValue
+    structElement = kernel
+    for i in np.ndenumerate(imagen):
+        maxValue = 0.
+        coordImg = i[0]
+        if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+            for j in np.ndenumerate(structElement):
+                coordKernel = j[0]
+                print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
+                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                if (aux>maxValue and  structElement[coordKernel]):
+                    maxValue = aux
+            for k in np.ndenumerate(structElement):
+                coordKernel = k[0]
+                imagenDilatada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = maxValue
     return imagenDilatada
 
 def apertura(imagen):

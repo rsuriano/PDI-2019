@@ -1,2 +1,11 @@
 https://stackoverflow.com/questions/10168686/image-processing-algorithm-improvement-for-coca-cola-can-recognition?rq=1
 http://learn.astropy.org/FITS-images.html
+
+si un kernel es mas grande el filtro es de menor frecuencia
+     
+     traslacion: 
+         0 0 1
+         0 0 0
+         0 0 0
+    
+    canny edge detection 

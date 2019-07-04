@@ -5,18 +5,6 @@ Created on Fri Jun 28 01:42:05 2019
 @author: Usuario
 """
 
-
-"""
-     si un kernel es mas grande el filtro es de menor frecuencia
-     
-     traslacion: 
-         0 0 1
-         0 0 0
-         0 0 0
-    
-    canny edge detection 
-
-"""
 import imageio
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,7 +21,7 @@ plt.figure(0)
 plt.imshow(imagen,'gray')
 
 
-#PasaBajos:
+#Kernels de filtros pasabajos:
 identidad5 = np.zeros((5,5))
 identidad5[2, 2] = 1
 plano3 = np.ones((3,3))/9
@@ -68,7 +56,7 @@ gaussiano7 = np.array([ [1,     6,     15,     20,     5,     6,     1],
                         [6,     36,    90,     120,    90,    36,    6],
                         [1,	    6,     15,     20,     15,    6,     1]])/4096
 
-#Detectores de bordes
+#Kernel de filtros detectores de bordes
 laplacianoV4 = np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]])
 laplacianoV8 = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
 sobelXleft = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])   #Eje X hacia la izquierda
@@ -80,13 +68,44 @@ sobelD2 = np.array([[0, -1, -2], [1, 0, -1], [2, 1, 0]]) #Diagonal topRight->bot
 sobelD3 = np.array([[0, 1, 2], [-1, 0, 1], [-2, -1, 0]]) #Diagonal bottomLeft->topRight
 sobelD4 = np.array([[2, 1, 0], [1, 0, -1], [0, -1, -2]]) #Diagonal bottomRight->topLeft
 
-pasaBanda = gaussiano5 - gaussiano3
+pasaBanda = gaussiano3 - gaussiano5
 pasaAltos02 = identidad5 - gaussiano5
 pasaAltos04 = identidad5 - gaussiano3
-    
-filtro = pasaBanda
+
+##Main program##
+filtro = laplacianoV4
 imagenFiltrada = tools.convolucionar(imagen, filtro)
-imagenFiltrada = np.clip(imagenFiltrada, 0., 1.)
+imagenFiltrada = tools.clipImg(imagenFiltrada)
 
 plt.figure(1)
 plt.imshow(imagenFiltrada, 'gray')
+
+
+
+
+#Sobel filters
+imgSobelX = tools.convolucionar(imagen, sobelXright)
+imgSobelY = tools.convolucionar(imagen, sobelYup)
+
+magnitudSobel = np.zeros(imagen.shape)
+faseSobel = np.zeros(imagen.shape)
+
+for i in np.ndenumerate(imgSobelX):
+    magnitudSobel[i[0]] = np.sqrt(np.square(imgSobelX[i[0]]) + np.square(imgSobelY[i[0]]))
+    if (imgSobelX[i[0]] != 0):
+        faseSobel[i[0]] = np.arctan(imgSobelY[i[0]]/imgSobelX[i[0]])
+
+magnitudSobel = tools.clipImg(magnitudSobel)
+faseSobel = tools.clipImg(faseSobel)
+    
+imgSobel = np.zeros(imagen.shape+(3,))
+imgSobel[:,:,0] = magnitudSobel
+imgSobel[:,:,1] = faseSobel
+
+imgSobelRGB = tools.convert_to('RGB', imgSobel)
+
+plt.figure(2)
+plt.imshow(magnitudSobel, 'gray')
+
+plt.figure(3)
+plt.imshow(imgSobelRGB)

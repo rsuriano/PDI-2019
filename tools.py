@@ -9,6 +9,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fftpack
 
+#Clipping images - misc
+def clipImg(image):
+    if (np.amin(image)<0 or np.amax(image)>1):
+        clippedImg = np.clip(image, 0., 1.)
+    return clippedImg
+        
 #Conversión RGB/YIQ - Slides 2
 def convert_to(space,image): 
     #esta funcion convierte una matriz 'image' al espacio cromático indicado en 'space'
@@ -155,12 +161,12 @@ def convolucionar(imagen, kernel):
     for i in np.ndenumerate(imagen):
         convolucion = 0.
         coordImg = i[0]
-        if coordImg[0]<imagen.shape[0]-margen and coordImg[1]<imagen.shape[0]-margen:  
+        if coordImg[0]<imagen.shape[0]-margen and coordImg[1]<imagen.shape[1]-margen:  
             for j in np.ndenumerate(kernel):
                 coordKernel = j[0]
                 convolucion += imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] * j[1]
         
-            imagenFiltrada[coordImg[0]+1, coordImg[1]+1] = convolucion
+            imagenFiltrada[coordImg[0]+int(kernel.shape[0]/2), coordImg[1]+int(kernel.shape[0]/2)] = convolucion
     return imagenFiltrada
 
 #Filtros morfologicos - Slides 7

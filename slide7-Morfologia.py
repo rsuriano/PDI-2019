@@ -2,7 +2,7 @@
 """
 Created on Fri Jun 28 15:29:20 2019
 
-@author: Ramiro
+@author: Suriano, Ramiro & Armanasco, Matias
 """
 
 import imageio
@@ -10,11 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
-#Loading image
+#Carga de la imagen
 imgpath = "images\slides7 - Morphology\{}.png"
 imgName = input("Select image name: ")
 imagen = imageio.imread(imgpath.format(imgName))
-#Normalization
+#Normalizacion
 if len(imagen.shape)>2:
     imagen = imagen[:,:,0]/255. 
 else:
@@ -24,7 +24,7 @@ imagen = np.clip(imagen,0.,1.)
 plt.figure(0)
 plt.imshow(imagen,'gray')
 
-#Input sequence
+#Secuencia de input
 print("1 - Erosion")
 print("2 - Dilatacion")
 print("3 - Apertura")
@@ -36,6 +36,7 @@ sequence = input("Seleccione secuencia de filtros: (ej: '1 2 1') ")
 sequence = sequence.split(' ')
 elementoEstructurante = np.ones((3,3))
 
+#Cálculo de las operaciones seleccionadas
 for i in sequence:
     filtro = int(i)
     if filtro == 1:

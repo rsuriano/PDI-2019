@@ -10,28 +10,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
-columnQty = 10
-escalar = 1.5
-filtro = 1
-Ymin = 0.1
-Ymax = 1
+#Datos de entrada
+columnQty = 10  #Cantidad de columnas del histograma
+escalar = 1.5   #Factor de escala de luminancia
+filtro = 1      #Numero del filtro a aplicar
+Ymin = 0.1      #Limite minimo de filtro lineal a trozos
+Ymax = 1        #Limite maximo de filtro lineal a trozos
+
 """
+Numero de filtro:
 1 - Raiz
 2 - Cuadrado
 3 - Lineal a trozos
 """
-#Loading image
+
+
+#Carga de la imagen
 imgpath = "images\slides4 - Histogram\{}.png"
 imgName = input("Select image name: ")
 img = imageio.imread(imgpath.format(imgName))
 img = img[:,:,:3]/255.
 
-
-"""Extracts Y layer"""
 img_YIQ = tools.convert_to("YIQ", img)
 img_Y = img_YIQ[:,:,0]
 
-#Plots original image and luminance histogram
+
+#Plot de la imagen original y su histograma
 plt.figure(1)
 plt.imshow(img)
 
@@ -40,15 +44,16 @@ names = np.arange(0,len(hist1))
 plt.figure(2)
 plt.bar(names,hist1, width=columnQty/20)
 
-"""Applies luminance change to a copy of img"""
-img2_YIQ = img_YIQ
+
+#Cambio de luminancia
+img2_YIQ = img_YIQ.copy()
 img2_YIQ[:,:,0] *= escalar
 img2_Y = np.clip(img2_YIQ[:,:,0],0.,1.)
 
 img2_YIQ[:,:,0] = img2_Y
 img2_RGB = tools.convert_to("RGB", img2_YIQ)
 
-#Plots altered image
+#Plot de la imagen con luminancia alterada
 plt.figure(3)
 plt.imshow(img2_RGB)
 
@@ -58,8 +63,8 @@ plt.figure(4)
 plt.bar(names, hist2, width = columnQty/20)
 
 
-"""Filters the image"""
-filteredImg_YIQ = img_YIQ
+#Filtro de la imagen
+filteredImg_YIQ = img_YIQ.copy()
 
 if filtro == 1:
     filteredImg_YIQ[:,:,0] = np.sqrt(filteredImg_YIQ[:,:,0])
@@ -77,7 +82,7 @@ if filtro == 3:
 
 filteredImg_RGB = tools.convert_to("RGB", filteredImg_YIQ)
 
-#Plots filtered image
+#Plot de la imagen filtrada
 plt.figure(5)
 plt.imshow(filteredImg_RGB)
 

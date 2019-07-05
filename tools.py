@@ -209,81 +209,81 @@ def quitarLimites(img, margin):
 def erosionar(imagen, kernel):
     print("Erosionando, tamaño {}".format(imagen.shape))
     imagenErosionada = np.zeros(imagen.shape)
-    """ el elemento estructurante tiene que ser una variable de la funcion"""
-    
     structElement = kernel
+    margen = kernel.shape[0]-1
+    
     for i in np.ndenumerate(imagen):
         minValue = 1.
         coordImg = i[0]
-        if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
+        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen):  
             for j in np.ndenumerate(structElement):
                 coordKernel = j[0]
-                #print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
                 aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
                 if (aux<minValue and  structElement[coordKernel]):
                     minValue = aux
-            for k in np.ndenumerate(structElement):
-                coordKernel = k[0]
-                imagenErosionada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = minValue 
+            imagenErosionada[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[0]/2)] = minValue 
+    
     return imagenErosionada
+
 
 def dilatar(imagen, kernel):
     print("Dilatando, tamaño {}".format(imagen.shape))
     imagenDilatada = np.zeros(imagen.shape)
     structElement = kernel
+    
     for i in np.ndenumerate(imagen):
         maxValue = 0.
         coordImg = i[0]
         if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
             for j in np.ndenumerate(structElement):
                 coordKernel = j[0]
-                print(coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1])
                 aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
                 if (aux>maxValue and  structElement[coordKernel]):
                     maxValue = aux
-            for k in np.ndenumerate(structElement):
-                coordKernel = k[0]
-                imagenDilatada[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = maxValue
+            imagenDilatada[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[1]/2)] = maxValue
+    
     return imagenDilatada
 
-def apertura(imagen):
+
+def apertura(imagen, kernel):
     print("Apertura...")
-    imagenProcesada = erosionar(imagen, 1)
-    imagenProcesada = dilatar(imagenProcesada, 1)
+    imagenProcesada = erosionar(imagen, kernel)
+    imagenProcesada = dilatar(imagenProcesada, kernel)
     return imagenProcesada
 
-def cierre(imagen):
+def cierre(imagen, kernel):
     print("Cierre...")
-    imagenProcesada = dilatar(imagen, 1)
-    imagenProcesada = erosionar(imagenProcesada, 1)
+    imagenProcesada = dilatar(imagen, kernel)
+    imagenProcesada = erosionar(imagenProcesada, kernel)
     return imagenProcesada
 
-def borde(imagen):
+def borde(imagen, kernel):
     print("Borde morfologico...")
-    imagenDilatada = dilatar(imagen, 1)
+    imagenDilatada = dilatar(imagen, kernel)
     imagenProcesada = imagenDilatada - imagen
     return imagenProcesada
 
-def mediana(imagen, times):
+def mediana(imagen, kernel):
     print("Filtro Mediana, tamaño {}".format(imagen.shape))
     imagenMediana = np.zeros(imagen.shape)
-    squaredCircle = np.zeros((3,3))
-    for x in range(times):
-        for i in np.ndenumerate(imagen):
-            carryMediana = 0.
-            coordImg = i[0]
-            if (coordImg[0]<imagen.shape[0]-2) and (coordImg[1]<imagen.shape[1]-2):  
-                for j in np.ndenumerate(squaredCircle):
-                    coordKernel = j[0]
-                    aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                    carryMediana += aux
-                for k in np.ndenumerate(squaredCircle):
-                    coordKernel = k[0]
-                    imagenMediana[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]] = carryMediana/9
+    structElement = kernel
+    margen = kernel.shape[0]-1
+    
+    for i in np.ndenumerate(imagen):
+        carryMediana = 0.
+        coordImg = i[0]
+        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen):  
+            for j in np.ndenumerate(structElement):
+                coordKernel = j[0]
+                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
+                carryMediana += aux
+            imagenMediana[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[1]/2)] = carryMediana/9
+    
     return imagenMediana
 
-def topHat(imagen):
+
+def topHat(imagen, kernel):
     print("Top Hat...")
-    imagenApertura = apertura(imagen)
+    imagenApertura = apertura(imagen, kernel)
     imagenProcesada = imagen - imagenApertura
     return imagenProcesada

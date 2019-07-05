@@ -32,11 +32,9 @@ print("4 - Cierre")
 print("5 - Borde")
 print("6 - Mediana")
 print("7 - Tophat")
-sequence = input("Seleccione secuencia de filtros: ")
+sequence = input("Seleccione secuencia de filtros: (ej: '1 2 1') ")
 sequence = sequence.split(' ')
-
 elementoEstructurante = np.ones((3,3))
-
 
 for i in sequence:
     filtro = int(i)
@@ -47,19 +45,19 @@ for i in sequence:
         img2 = tools.dilatar(imagen, elementoEstructurante)
         
     if filtro == 3:
-        img2 = tools.apertura(imagen)
+        img2 = tools.apertura(imagen, elementoEstructurante)
     
     if filtro == 4:
-        img2 = tools.cierre(imagen)
+        img2 = tools.cierre(imagen, elementoEstructurante)
     
     if filtro == 5:
-        img2 = tools.borde(imagen)
+        img2 = tools.borde(imagen, elementoEstructurante)
         
     if filtro == 6:
         img2 = tools.mediana(imagen, elementoEstructurante)
     
     if filtro == 7:
-        img2 = tools.topHat(imagen)
-        
+        img2 = tools.topHat(imagen, elementoEstructurante)
+   
     plt.figure(i)
     plt.imshow(img2, 'gray')

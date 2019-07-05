@@ -2,7 +2,7 @@
 """
 Created on Fri Jun 28 01:42:05 2019
 
-@author: Usuario
+@author: Suriano, Ramiro & Armanasco, Matias
 """
 
 import imageio
@@ -10,11 +10,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
-#Loading image
+#Carga de la imagen
 imgpath = "images\slides6 - Convolution\{}.png"
 imgName = input("Select image name: ")
 imagen = imageio.imread(imgpath.format(imgName))
-#Normalization
+#Normalizacion
 if len(imagen.shape)>2:
     imagen = imagen[:,:,0]/255. 
 else:
@@ -72,11 +72,12 @@ sobelD2 = np.array([[0, -1, -2], [1, 0, -1], [2, 1, 0]]) #Diagonal topRight->bot
 sobelD3 = np.array([[0, 1, 2], [-1, 0, 1], [-2, -1, 0]]) #Diagonal bottomLeft->topRight
 sobelD4 = np.array([[2, 1, 0], [1, 0, -1], [0, -1, -2]]) #Diagonal bottomRight->topLeft
 
+#Kernels pasabanda y pasa altos
 pasaBanda = gaussiano3 - gaussiano5
 pasaAltos02 = identidad5 - gaussiano5
 pasaAltos04 = identidad5 - gaussiano3
 
-"""Main program"""
+"""Input, calculo de la convolución con el filtro seleccionado"""
 filtro = laplacianoV8
 imagenFiltrada = tools.convolucionar(imagen, filtro)
 imagenFiltrada = tools.clipImg(imagenFiltrada)
@@ -86,29 +87,26 @@ plt.imshow(imagenFiltrada, 'gray')
 
 
 
-#Sobel filters
+#Filtro sobel X e Y
 imgSobelX = tools.convolucionar(imagen, sobelXright)
 imgSobelY = tools.convolucionar(imagen, sobelYup)
 
+#Calculos de magnitud y fase
 magnitudSobel = np.zeros(imagen.shape)
 faseSobel = np.zeros(imagen.shape)
-
 for i in np.ndenumerate(imgSobelX):
     magnitudSobel[i[0]] = np.sqrt(np.square(imgSobelX[i[0]]) + np.square(imgSobelY[i[0]]))
     if (imgSobelX[i[0]] != 0):
         faseSobel[i[0]] = np.arctan(imgSobelY[i[0]]/imgSobelX[i[0]])
-
+        
 magnitudSobel = tools.clipImg(magnitudSobel)
 faseSobel = tools.clipImg(faseSobel)
-    
+
+#Armado de imagen final RGB con información del filtro Sobel    
 imgSobel = np.zeros(imagen.shape+(3,))
 imgSobel[:,:,0] = magnitudSobel
 imgSobel[:,:,1] = faseSobel
-
 imgSobelRGB = tools.convert_to('RGB', imgSobel)
-
-plt.figure(2)
-plt.imshow(magnitudSobel, 'gray')
 
 plt.figure(3)
 plt.imshow(imgSobelRGB)

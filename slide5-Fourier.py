@@ -6,14 +6,12 @@ Created on Thu Jun 27 23:24:14 2019
 """
 
 import imageio
-from scipy import fftpack
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
 from PIL import Image
 
 img = "images\slides5 - Fourier\{}.png"
-#imagen = imagen/255. #lo divido por 255 para cambiarlo de unit8
 
 imgName = input("Select image name: ")
 imagen = imageio.imread(img.format(imgName))

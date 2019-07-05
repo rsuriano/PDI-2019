@@ -2,23 +2,21 @@
 """
 Created on Sun Jun  2 18:37:36 2019
 
-@author: Usuario
+@author: Suriano, Ramiro & Armanasco, Matias
 """
 
 import imageio
-import numpy as np
 import matplotlib.pyplot as plt
 import tools
 
+#Carga y normalización de imagenes
 fig=plt.figure()
 paisaje = imageio.imread("images\slides3 - Pixel Arithmetic\image1.png")
-paisaje = paisaje[:,:,:3]/255. #dejo las dos primeras bandas, y de la tercer banda borro una (alpha)
-                           #lo divido por 255 para cambiarlo de unit8
+paisaje = paisaje[:,:,:3]/255. 
 plaza = imageio.imread("images\slides3 - Pixel Arithmetic\image2.png")
 plaza = plaza[:,:,:3]/255.
 
-resultado = np.zeros(paisaje.shape)
-
+#User input de la operacion a realizar
 print("1 - Suma RGB Clampeada")
 print("2 - Resta RGB Clampeada")
 print("3 - Suma RGB Promediada")
@@ -26,9 +24,8 @@ print("4 - Resta RGB Promediada")
 print("5 - Suma YIQ Clampeada")
 print("6 - Suma YIQ Promediada")
 print("7 - ifDarker")
-
-
 suma = input('Elija operación (de 1 a 7): ')
+
 
 if suma=='1':
     resultado = tools.sumaClampeadaRGB(paisaje,plaza)

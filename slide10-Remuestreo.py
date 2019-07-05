@@ -126,15 +126,21 @@ elif opcion == '4':
             promY = imagen[normal_x,normal_y]+imagen[normal_x,normal_y+1]/2
             upsizing[coordenadaX,coordenadaY+1]   = promY
             
-            prom = (promX+promY)/2
+            prom = (imagen[normal_x,normal_y]+imagen[normal_x+1,normal_y]+imagen[normal_x,normal_y+1]+imagen[normal_x+1,normal_y+1])
+            prom = prom/4
             upsizing[coordenadaX+1,coordenadaY+1] = prom
             
             normal_x = normal_x+1
+            
             coordenadaX = coordenadaX + 2
+            if coordenadaX >= 127:
+                break
         normal_y = normal_y+1
         normal_x = 0
         coordenadaX = 0
         coordenadaY = coordenadaY + 2
+        if coordenadaY >= 127:
+            break
     #downsizing = downsizing*100
     plt.figure(1)
     plt.imshow(upsizing,'gray')

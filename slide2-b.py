@@ -17,5 +17,3 @@ im_retina = imageio.imread("images\slides2 - Colormaps\RetinaG.png")
 tools.showColormaps(im_lena)
 tools.showColormaps(im_particles)
 tools.showColormaps(im_retina)
-
-

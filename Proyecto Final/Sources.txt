@@ -1,0 +1,6 @@
+https://perso.crans.org/frenoy/matlab2012/seamcarving.pdf
+https://github.com/andrewdcampbell/seam-carving
+
+
+https://en.wikipedia.org/wiki/CIELUV
+https://en.wikipedia.org/wiki/CIELAB_color_space

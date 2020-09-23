@@ -5,3 +5,6 @@ https://github.com/andrewdcampbell/seam-carving
 https://en.wikipedia.org/wiki/CIELUV
 https://en.wikipedia.org/wiki/CIELAB_color_space
 http://www.brucelindbloom.com/index.html?Eqn_RGB_to_XYZ.html
+
+
+https://avikdas.com/2019/05/14/real-world-dynamic-programming-seam-carving.html

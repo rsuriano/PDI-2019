@@ -72,7 +72,7 @@ def seamremover_revisited(N,roads,imagenOriginal):
         filaMapa = roads[ult_fila,:]
         
         pixel = N + filaMapa[N]                 #pixel es el que voy a eliminar   
-        print(fila.shape)
+        #print(fila.shape)
         
         #elimino 'pixel' de las tres capas
         fila = np.concatenate((fila[0:N,:], fila[N+1:ancho,:]))

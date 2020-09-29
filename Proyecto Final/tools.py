@@ -9,6 +9,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import fftpack
 
+#plot image
+def plotImg(image, title):
+    plt.figure()
+    plt.title(title)
+    plt.imshow(clipImg(image))
+
 
 #Clipping images - Misc:
 def clipImg(image):

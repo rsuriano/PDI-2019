@@ -9,6 +9,7 @@ import imageio
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
+import seamTools as st
 from scipy import ndimage
 
 #Carga de la imagen
@@ -44,8 +45,20 @@ imgSobelY = ndimage.convolve(imagY,sobelY)
 
 #Calculo de magnitud
 magnitudSobel = np.sqrt(np.square(imgSobelX) + np.square(imgSobelY))
-magnitudSobel = tools.clipImg(magnitudSobel)
-
 plt.figure()
 plt.title('Energia de la imagen')
-plt.imshow(magnitudSobel)
+plt.imshow(tools.clipImg(magnitudSobel))
+
+
+
+#buscador de seam con energia minima a eliminar
+startPoint, seamMap = st.seamFinder(imagY, magnitudSobel)
+
+#removedor de seam
+removed, seam = st.seamremover_revisited(int(startPoint), seamMap, imagen)
+plt.figure()
+plt.title('Camino a eliminar')
+done = tools.clipImg(imagen+seam)
+plt.imshow(done)
+
+tools.plotImg(removed, 'imagen sin la fila eliminada')

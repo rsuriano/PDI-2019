@@ -41,90 +41,6 @@ def convert_to(space,image):
         return image
 
 
-#Colormaps - Slides 2:
-def showColormaps (image):
-    plt.imshow(image)
-    plt.show()
-
-    plt.imshow(image, 'jet')
-    plt.show()
-    
-    plt.imshow(image, 'ocean')
-    plt.show()
-    
-    plt.imshow(image, 'gray')
-    plt.show()
-    
-    plt.imshow(image, 'rainbow')
-    plt.show()
-    
-    plt.imshow(image, 'nipy_spectral')
-    plt.show()
-    return 0    
-    
-
-
-#Aritmetica de pixels - Slides 3:
-def sumaClampeadaRGB(image1,image2):
-    image3 = image1 + image2
-    image3 = np.clip(image3,0.,1.)
-    return image3
-
-def restaClampeadaRGB(image1,image2):
-    image3 = image1 - image2
-    image3 = np.clip(image3,0.,1.)
-    return image3
-
-def sumaPromRGB(image1,image2):
-    image3 = (image1 + image2)/2
-    image3 = np.clip(image3,0.,1.)
-    return image3
-
-def restaPromRGB(image1,image2):
-    image3 = (image1 - image2)/2 + np.ones(image1.shape)*0.5
-    image3 = np.clip(image3,0.,1.)
-    return image3
-
-def sumaClampeadaYIQ(image1,image2):
-    image3 = np.zeros(image1.shape)
-    image1 = convert_to('YIQ',image1)    
-    image2 = convert_to('YIQ',image2)
-    
-    image3[:,:,0] = (image1[:,:,0] + image2[:,:,0])
-    image3[:,:,1] = [image1[:,:,0]*image1[:,:,1] + image2[:,:,0]*image2[:,:,1]]/(image1[:,:,0]+image2[:,:,0])
-    image3[:,:,2] = [image1[:,:,0]*image1[:,:,2] + image2[:,:,0]*image2[:,:,2]]/(image1[:,:,0]+image2[:,:,0])
-
-    image3[:,:,0] = np.clip(image3[:,:,0],0.,1.)
-    image3 = convert_to('RGB',image3)
-    return image3
-
-def sumaPromYIQ(image1,image2):
-    image3 = np.zeros(image1.shape)
-    image1 = convert_to('YIQ',image1)    
-    image2 = convert_to('YIQ',image2)
-
-    image3[:,:,0] = (image1[:,:,0] + image2[:,:,0])/2
-    image3[:,:,1] = [image1[:,:,0]*image1[:,:,1] + image2[:,:,0]*image2[:,:,1]]/(image1[:,:,0]+image2[:,:,0])
-    image3[:,:,2] = [image1[:,:,0]*image1[:,:,2] + image2[:,:,0]*image2[:,:,2]]/(image1[:,:,0]+image2[:,:,0])
-
-    image3[:,:,0] = np.clip(image3[:,:,0],0.,1.)
-    image3 = convert_to('RGB',image3)
-    return image3
-
-def ifDarker(image1,image2):
-    image3 = np.zeros(image1.shape)
-    image1 = convert_to('YIQ',image1)    
-    image2 = convert_to('YIQ',image2)
-
-    darker = image1[:,:,0]<image2[:,:,0]
-    brighter = 1 - darker
-    for i in range(3):
-        image3[:,:,i] = image1[:,:,i]*darker + image2[:,:,i]*brighter
-    
-    image3 = convert_to('RGB',image3)
-    return image3
-
-
 
 #Luminancia - Slides 4 - Histograma de luminancias:
 def histogramaY(image, bars):
@@ -192,6 +108,7 @@ def convolucionar(img, kernel):
     return imagenSalida
 
 
+
 #Agregar contorno a imagen - Slide 6
 def expandirLimites(img, margin):
     newImg = np.zeros((img.shape[0]+2*margin, img.shape[1]+2*margin))
@@ -222,81 +139,3 @@ def quitarLimites(img, margin):
             origImg[(nImgCoord[0]-margin, nImgCoord[1]-margin)] = img[nImgCoord] 
     return origImg
 
-
-
-#Filtros morfologicos - Slides 7
-def erosionar(imagen, structElement):
-    print("Erosionando, tamaño {}".format(imagen.shape))
-    imagenErosionada = np.zeros(imagen.shape)
-    margen = structElement.shape[0]-1
-    
-    for i in np.ndenumerate(imagen):
-        minValue = 1.
-        coordImg = i[0]
-        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen):  
-            for j in np.ndenumerate(structElement):
-                coordKernel = j[0]
-                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                if (aux<minValue and  structElement[coordKernel]):
-                    minValue = aux
-            imagenErosionada[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[0]/2)] = minValue
-    return imagenErosionada
-
-
-def dilatar(imagen, structElement):
-    print("Dilatando, tamaño {}".format(imagen.shape))
-    imagenDilatada = np.zeros(imagen.shape)
-    margen = structElement.shape[0]-1
-    
-    for i in np.ndenumerate(imagen):
-        maxValue = 0.
-        coordImg = i[0]
-        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen):  
-            for j in np.ndenumerate(structElement):
-                coordKernel = j[0]
-                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                if (aux>maxValue and  structElement[coordKernel]):
-                    maxValue = aux
-            imagenDilatada[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[1]/2)] = maxValue
-    return imagenDilatada
-
-
-def apertura(imagen, kernel):
-    print("Apertura...")
-    imagenProcesada = erosionar(imagen, kernel)
-    imagenProcesada = dilatar(imagenProcesada, kernel)
-    return imagenProcesada
-
-def cierre(imagen, kernel):
-    print("Cierre...")
-    imagenProcesada = dilatar(imagen, kernel)
-    imagenProcesada = erosionar(imagenProcesada, kernel)
-    return imagenProcesada
-
-def borde(imagen, kernel):
-    print("Borde morfologico...")
-    imagenDilatada = dilatar(imagen, kernel)
-    imagenProcesada = imagenDilatada - imagen
-    return imagenProcesada
-
-def mediana(imagen, structElement):
-    print("Filtro Mediana, tamaño {}".format(imagen.shape))
-    imagenMediana = np.zeros(imagen.shape)
-    margen = structElement.shape[0]-1
-    
-    for i in np.ndenumerate(imagen):
-        carryMediana = 0.
-        coordImg = i[0]
-        if (coordImg[0]<imagen.shape[0]-margen) and (coordImg[1]<imagen.shape[1]-margen):  
-            for j in np.ndenumerate(structElement):
-                coordKernel = j[0]
-                aux = imagen[coordImg[0]+coordKernel[0], coordImg[1]+coordKernel[1]]
-                carryMediana += aux
-            imagenMediana[coordImg[0]+int(structElement.shape[0]/2), coordImg[1]+int(structElement.shape[1]/2)] = carryMediana/np.square(margen)
-    return imagenMediana
-
-def topHat(imagen, kernel):
-    print("Top Hat...")
-    imagenApertura = apertura(imagen, kernel)
-    imagenProcesada = imagen - imagenApertura
-    return imagenProcesada

@@ -9,6 +9,7 @@ import imageio
 import numpy as np
 import matplotlib.pyplot as plt
 import tools
+from scipy import ndimage
 
 #Carga de la imagen
 imgName = input("Select image name: ")
@@ -16,34 +17,35 @@ imagen = imageio.imread(imgName)
 
 #Normalizacion
 if len(imagen.shape)>2:
-    imagen = imagen[:,:,0]/255. 
+    imagen = imagen[:,:,:3]/255. 
 else:
     imagen = imagen/255. 
-imagen = np.clip(imagen,0.,1.)
 
-plt.figure(0)
-plt.imshow(imagen,'gray')
+plt.figure()
+plt.title('Imagen ingresada')
+plt.imshow(imagen)
+
+#Conversion a YIQ para extraer luminancia
+imagYIQ = tools.convert_to("YIQ",imagen)
+imagY = imagYIQ[:,:,0]
+
+plt.figure()
+plt.title('Luminancia imagen original')
+plt.imshow(imagY,'gray')
 
 
 #Kernels filtros detectores de bordes
-sobelXleft = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])   #Eje X hacia la izquierda
-sobelXright = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  #Eje X hacia la derecha
-sobelYup = np.array([[2, 1, 2], [0, 0, 0], [-2, -1, -2]])     #Eje Y hacia arriba
-sobelYdown = np.array([[-2, -1, -2], [0, 0, 0], [2, 1, 2]])   #Eje Y hacia abajo
-
+sobelX = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  #Eje X hacia la derecha
+sobelY = np.array([[-2, -1, -2], [0, 0, 0], [2, 1, 2]])  #Eje Y hacia abajo
 
 #Filtro sobel X e Y
-imgSobelX = tools.convolucionar(imagen, sobelXright)
-imgSobelY = tools.convolucionar(imagen, sobelYdown)
+imgSobelX = ndimage.convolve(imagY,sobelX)
+imgSobelY = ndimage.convolve(imagY,sobelY)
 
-#Calculos de magnitud y fase
-magnitudSobel = np.zeros(imagen.shape)
-faseSobel = np.zeros(imagen.shape)
-for i in np.ndenumerate(imgSobelX):
-    magnitudSobel[i[0]] = np.sqrt(np.square(imgSobelX[i[0]]) + np.square(imgSobelY[i[0]]))
-        
+#Calculo de magnitud
+magnitudSobel = np.sqrt(np.square(imgSobelX) + np.square(imgSobelY))
 magnitudSobel = tools.clipImg(magnitudSobel)
-faseSobel = tools.clipImg(faseSobel)
 
 plt.figure()
+plt.title('Energia de la imagen')
 plt.imshow(magnitudSobel)

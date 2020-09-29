@@ -191,6 +191,15 @@ def convolucionar(img, kernel):
     imagenSalida = quitarLimites(imagenConv, borde)
     return imagenSalida
 
+#Convolucion 2.0- Proyecto Final:
+#Realiza la convolucion entre la imagen y dos kernels
+def convolucionar2(img, kernel1, kernel2):
+    
+    kernelCombinado = convolucionar(kernel1, kernel2)
+    imagenSalida = convolucionar(img, kernelCombinado)
+    
+    return imagenSalida
+
 
 #Agregar contorno a imagen - Slide 6
 def expandirLimites(img, margin):

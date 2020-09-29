@@ -62,7 +62,7 @@ def seamremover(N,roads,imagenOriginal):
 def seamremover_revisited(N,roads,imagenOriginal):
     #método para remover un camino de mínima energía almacenado en roads
     alto, ancho = imagenOriginal.shape[0:2]
-    imagenAuxiliar = np.zeros([alto,ancho-1])
+    imagenAuxiliar = np.zeros([alto,ancho-1,3])
     ult_fila = alto-1
     pixel = N
     seam = np.zeros(imagenOriginal.shape)
@@ -72,9 +72,12 @@ def seamremover_revisited(N,roads,imagenOriginal):
         filaMapa = roads[ult_fila,:]
         
         pixel = N + filaMapa[N]                 #pixel es el que voy a eliminar   
-        fila = np.delete(fila, N)               #elimino 'pixel'
         print(fila.shape)
-        seam[ult_fila,N-2:N+2,0] = 1.
+        
+        #elimino 'pixel' de las tres capas
+        fila = np.concatenate((fila[0:N,:], fila[N+1:ancho,:]))
+        
+        seam[ult_fila,N-2:N+2,0] = 1.       #creo la imagen con el seam para mostrar graficamente
         imagenAuxiliar[ult_fila,:] = fila   #la fila sin 'pixel' la guardo en la nueva imagen
         N = int(pixel)                           #actualizo N para cuando vuelvo a pasar el loop
         ult_fila = (ult_fila - 1)           #actualizo la ultima fila para cunaod vuelvo a pasar el loop

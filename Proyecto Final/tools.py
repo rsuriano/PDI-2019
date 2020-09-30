@@ -6,11 +6,11 @@ Created on Fri May 17 17:40:09 2019
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy import fftpack
 
 #plot image
-def plotImg(image, title):
+def pltImg(image, title):
+    import matplotlib.pyplot as plt
     plt.figure()
     plt.title(title)
     plt.imshow(clipImg(image))

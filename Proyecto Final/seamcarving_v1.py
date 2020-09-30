@@ -15,6 +15,9 @@ from scipy import ndimage
 #Carga de la imagen
 imgName = input("Select image name: ")
 imagen = imageio.imread(imgName)
+print('La imagen cargada tiene', imagen.shape[0],'pixeles de alto y',imagen.shape[1], 'pixeles de ancho.')
+colsToDelete = int(input('Cuantas columnas desea eliminar? (ancho) '))
+rowsToDelete = int(input('Cuantas filas desea eliminar? (alto) '))
 
 #Normalizacion
 if len(imagen.shape)>2:
@@ -24,7 +27,6 @@ else:
 
 
 tools.pltImg(imagen, 'Imagen ingresada')
-
 
 #Conversion a YIQ para extraer luminancia
 imagYIQ = tools.convert_to("YIQ",imagen)
@@ -46,11 +48,12 @@ tools.pltImg(tools.clipImg(magnitudSobel), 'Energia de la imagen')
 
 
 ###### EMPIEZA EL SEAM CARVING ######
-colsToDelete = 15
+#Delete de columnas
 deletedCols = 0
 procImg = imagen
+print('Eliminando columnas...')
 while deletedCols<colsToDelete:
-    print(deletedCols)
+    print(np.round(deletedCols/(colsToDelete+rowsToDelete)*100,3),'%')
     #Conversion a YIQ para extraer luminancia
     imagYIQ = tools.convert_to("YIQ",procImg)
     imagY = imagYIQ[:,:,0]
@@ -72,21 +75,21 @@ while deletedCols<colsToDelete:
 
     procImg = removed
 
-tools.pltImg(removed, 'Imagen procesada')
+tools.pltImg(removed, 'Imagen reajustada en ancho')
 
-rowsToDelete = 50
+
+#Delete de filas
 deletedRows = 0
-
 altura,largo = removed.shape[0:2]
-
+#rotado de la imagen
 procImg2 = np.zeros([largo,altura,3])
-
 procImg2[:,:,0] = np.transpose(removed[:,:,0])
 procImg2[:,:,1] = np.transpose(removed[:,:,1])
 procImg2[:,:,2] = np.transpose(removed[:,:,2])
-
+#comienzo del loop
+print('Eliminando filas...')
 while deletedRows<rowsToDelete:
-    print(deletedRows)    
+    print(np.round((deletedRows+deletedCols)/(colsToDelete+rowsToDelete)*100,3),'%')   
     #Conversion a YIQ para extraer luminancia
     imagYIQ = tools.convert_to("YIQ",procImg2)
     imagY = imagYIQ[:,:,0]
@@ -109,11 +112,10 @@ while deletedRows<rowsToDelete:
     procImg2 = removed
 
 altura,largo = removed.shape[0:2]
-
 normal = np.zeros([largo,altura,3])
 
 normal[:,:,0] = np.transpose(removed[:,:,0])
 normal[:,:,1] = np.transpose(removed[:,:,1])
 normal[:,:,2] = np.transpose(removed[:,:,2])
 
-tools.pltImg(normal, 'Imagen procesada horizontal')
+tools.pltImg(normal, 'Imagen reajustada final')

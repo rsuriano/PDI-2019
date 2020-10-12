@@ -35,7 +35,7 @@ imagY = imagYIQ[:,:,0]
 
 #Kernels filtros detectores de bordes
 sobelX = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])  #Eje X hacia la derecha
-sobelY = np.array([[-2, -1, -2], [0, 0, 0], [2, 1, 2]])  #Eje Y hacia abajo
+sobelY = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])  #Eje Y hacia abajo
 
 #Filtro sobel X e Y
 imgSobelX = ndimage.convolve(imagY,sobelX)
